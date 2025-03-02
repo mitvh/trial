@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charles University Entrance Exam Registration</title>
+    <!-- PayPal SDK (sandbox mode) -->
+    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_SANDBOX_CLIENT_ID&components=buttons,funding-card"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(to right, #007bff, #00c6ff);
+            color: white;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+            color: black;
+        }
+        h2, h3 {
+            color: #007bff;
+        }
+        form {
+            text-align: left;
+        }
+        label {
+            font-weight: bold;
+        }
+        input, button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .success-message {
+            color: green;
+            display: none;
+            font-weight: bold;
+        }
+        .error-message {
+            color: red;
+            display: none;
+            font-weight: bold;
+        }
+        .paypal-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Charles University Entrance Exam</h2>
+        <p>Register now for the entrance exam and secure your spot!</p>
+        <form id="registrationForm">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" placeholder="Enter your full name" required>
+            
+            <label for="email">Email Address</label>
+            <input type="email" id="email" placeholder="Enter your email" required>
+            
+            <label for="passport">Passport Number</label>
+            <input type="text" id="passport" placeholder="Enter your passport number" required>
+            
+            <button type="submit">Register</button>
+        </form>
+        
+        <h3>Exam Fee: $250</h3>
+        <p>Proceed with the payment to complete your registration.</p>
+        <div class="paypal-container" id="paypal-button-container"></div>
+        <p class="success-message" id="successMessage">✅ Payment successful! Thank you for registering.</p>
+        <p class="error-message" id="errorMessage">❌ Payment failed. Please try again.</p>
+    </div>
+    
+    <script>
+        // Handle registration form submission
+        document.getElementById('registrationForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            alert('Registration submitted! Proceed with payment.');
+        });
+
+        // PayPal button setup
+        paypal.Buttons({
+            fundingSource: paypal.FUNDING.CARD, // Enables credit/debit card payment
+            style: {
+                shape: 'rect',
+                color: 'blue',
+                layout: 'vertical',
+                label: 'pay'
+            },
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{ amount: { value: '250' } }] // Exam fee
+                });
+            },
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(details) {
+                    // Show success message upon successful payment
+                    document.getElementById("successMessage").style.display = "block";
+                });
+            },
+            onError: function(err) {
+                // Show error message if payment fails
+                document.getElementById("errorMessage").style.display = "block";
+            }
+        }).render('#paypal-button-container');
+    </script>
+</body>
+</html>
